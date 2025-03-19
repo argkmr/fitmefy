@@ -1,0 +1,13 @@
+# Dockerfile
+FROM postgres:latest
+
+# Set environment variables
+ENV POSTGRES_USER=argkmr
+ENV POSTGRES_PASSWORD=argkmr-psql
+ENV POSTGRES_DB=fitmefy-db
+
+# Expose the PostgreSQL port
+EXPOSE 5432
+
+#docker build -t fitmefy-db -f Dockerfile-psql .
+#docker run -d --name fitmefy-db -p 5435:5432 fitmefy-db
