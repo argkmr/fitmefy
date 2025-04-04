@@ -1,4 +1,4 @@
-package entities;
+package com.fitmefy_backend.entities;
 
 import jakarta.persistence.*;
 
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class Otp {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "otp_code", nullable = false)

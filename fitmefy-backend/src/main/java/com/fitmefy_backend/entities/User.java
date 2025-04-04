@@ -1,4 +1,4 @@
-package entities;
+package com.fitmefy_backend.entities;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -8,7 +8,7 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(nullable = false)

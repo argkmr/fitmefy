@@ -4,7 +4,7 @@ FROM postgres:latest
 # Set environment variables
 ENV POSTGRES_USER=argkmr
 ENV POSTGRES_PASSWORD=argkmr-psql
-ENV POSTGRES_DB=fitmefy-db
+ENV POSTGRES_DB=fitmefy_db
 
 # Expose the PostgreSQL port
 EXPOSE 5432
