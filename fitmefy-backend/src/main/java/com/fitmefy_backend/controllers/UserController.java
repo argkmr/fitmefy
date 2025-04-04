@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import com.fitmefy_backend.services.UserService;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -20,17 +22,27 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public UUID setUserInfo(@RequestBody RegisterUserDto registerUserDto) {
-        if(registerUserDto.getEmail()==null || registerUserDto.getName()==null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name and Email cannot be empty.");
+    public ResponseEntity<?> setUserInfo(@RequestBody RegisterUserDto registerUserDto) {
+        try{
+            if(registerUserDto.getEmail()==null || registerUserDto.getName()==null){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name and Email cannot be empty.");
+            }
+
+            Map<String, UUID> response = new HashMap<>();
+            UUID id = userService.setUserInfoInDB(registerUserDto.getName(), registerUserDto.getEmail(), UserRole.DEDICATED_USER);
+            response.put("userId", id);
+            return ResponseEntity.ok(response);
+
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-        return userService.setUserInfoInDB(registerUserDto.getName(), registerUserDto.getEmail(), UserRole.DEDICATED_USER);
+
     }
 
     @PostMapping("/send-otp")
     public ResponseEntity<String> sendUserOtp(@RequestBody UserOtpDto userOtpDto) {
         if(userOtpDto.getEmail()==null || userOtpDto.getId()==null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email and Id cannot be empty.");
+            return ResponseEntity.badRequest().body("Email and Id cannot be empty.");
         }
         int otp = userService.generateUserOtp();
         if(!userService.sendOtpToUserEmail(userOtpDto.getEmail(), userOtpDto.getId(), otp)){

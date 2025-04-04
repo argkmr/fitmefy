@@ -2,6 +2,7 @@ package com.fitmefy_backend.services;
 
 import com.fitmefy_backend.enums.UserRole;
 import jakarta.transaction.Transactional;
+import org.hibernate.sql.exec.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fitmefy_backend.entities.User;
 import com.fitmefy_backend.repository.UserRepository;
 
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -23,12 +25,24 @@ public class UserService {
 
     @Transactional
     public UUID setUserInfoInDB(String name, String email, UserRole role) {
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        user.setRole(role.toString());
-        user = userRepository.save(user);
-        return user.getId();
+        try{
+            Optional<User> optionalUser = userRepository.findByEmail(email);
+            if (optionalUser.isPresent()){
+                String existingUserEmail = optionalUser.get().getEmail();
+                if (existingUserEmail.equals(email)){ // don't do existingUserEmail==email it will check the reference not the value
+                    throw new IllegalStateException("User already Exists");
+                }
+            }
+            User user = new User();
+            user.setName(name);
+            user.setEmail(email);
+            user.setRole(role.toString());
+            user = userRepository.save(user);
+            return user.getId();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     public int generateUserOtp(){
