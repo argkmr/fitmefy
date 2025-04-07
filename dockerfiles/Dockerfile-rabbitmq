@@ -1,0 +1,17 @@
+FROM rabbitmq:3-management
+
+# Set environment variables
+ENV RABBITMQ_DEFAULT_USER=argkmr
+ENV RABBITMQ_DEFAULT_PASS=argkmr-rabbit
+ENV RABBITMQ_DEFAULT_VHOST=dev
+
+# Copy the definitions file into the container
+COPY utils/rabbitmq-definitions.json /etc/rabbitmq/definitions.json
+
+# Enable loading the definitions file
+ENV RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS='-rabbitmq_management load_definitions "/etc/rabbitmq/definitions.json"'
+
+EXPOSE 15672 5672
+
+# docker build -t fitmefy-rabbitmq -f Dockerfile-rabbitmq .
+# docker run -d --name fitmefy-rabbitmq -p 5672:5672 -p 15672:15672 fitmefy-rabbitmq

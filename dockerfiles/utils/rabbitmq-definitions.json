@@ -1,0 +1,37 @@
+{
+  "vhosts": [
+    { "name": "/dev" },
+    { "name": "/stage" },
+    { "name": "/prod" }
+  ],
+  "users": [
+    {
+      "name": "argkmr",
+      "password": "argkmr-rabbitmq",
+      "tags": "administrator"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "argkmr",
+      "vhost": "/dev",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
+      "user": "argkmr",
+      "vhost": "/stage",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
+      "user": "argkmr",
+      "vhost": "/prod",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ]
+}

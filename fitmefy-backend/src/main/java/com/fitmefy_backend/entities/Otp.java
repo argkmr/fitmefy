@@ -1,11 +1,17 @@
 package com.fitmefy_backend.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "otps")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Otp {
 
     @Id
@@ -13,10 +19,7 @@ public class Otp {
     private Long id;
 
     @Column(name = "otp_code", nullable = false)
-    private String otpCode;
-
-    @Column(name = "is_valid", nullable = false)
-    private Boolean isValid = true;
+    private Integer otpCode;
 
     @Column(name = "generated_at", nullable = false)
     private LocalDateTime generatedAt;
@@ -24,14 +27,15 @@ public class Otp {
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @PrePersist
     protected void onCreate() {
         this.generatedAt = LocalDateTime.now();
+        if (this.expiresAt == null) {
+            this.expiresAt = this.generatedAt.plusMinutes(5);
+        }
     }
-
-    // Getters and Setters
 }
